@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TalentSphere | Next-Generation Recruitment System</title>
+  <meta name="description" content="TalentSphere is a frontend-only recruitment platform prototype. Search jobs, apply, track applications, and manage hiring, all in your browser." />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%232563ff'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='white' stroke-opacity='.6' stroke-width='1.6'/%3E%3Ccircle cx='16' cy='16' r='3.4' fill='white'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Shared logo symbol (used in the navbar, hero and footer) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#2563ff" />
+        <stop offset="1" stop-color="#7c3aed" />
+      </linearGradient>
+      <symbol id="logoMark" viewBox="0 0 32 32">
+        <rect width="32" height="32" rx="9" fill="url(#logoGrad)" />
+        <circle cx="16" cy="16" r="9" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.6" />
+        <circle cx="16" cy="16" r="3.4" fill="#fff" />
+        <circle cx="23.2" cy="10.8" r="2.2" fill="#fff" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <noscript><p class="noscript">TalentSphere needs JavaScript to run. Please enable it in your browser.</p></noscript>
+
+  <!-- Prototype notice -->
+  <div class="demo-banner" id="demoBanner" role="note">
+    <p><strong>Educational prototype.</strong> TalentSphere runs entirely in your browser with sample data. There is no server, no real accounts and no real emails.</p>
+    <div class="demo-banner-actions">
+      <button type="button" class="link-btn" data-action="info" data-arg="prototype">What does that mean?</button>
+      <button type="button" class="icon-btn icon-btn-sm" id="bannerClose" aria-label="Dismiss prototype notice" data-icon="x" data-size="16"></button>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="#home" class="brand" data-nav="home" aria-label="TalentSphere home">
+        <svg class="brand-mark" aria-hidden="true"><use href="#logoMark" /></svg>
+        <span class="brand-name">TalentSphere</span>
+      </a>
+
+      <nav class="nav-links" id="primaryNav" aria-label="Primary">
+        <a href="#home" data-nav="home">Home</a>
+        <a href="#jobs" data-nav="jobs">Find Jobs</a>
+        <a href="#companies" data-nav="companies">Companies</a>
+        <a href="#how" data-nav="how">How It Works</a>
+        <a href="#about" data-nav="about">About Us</a>
+        <div class="nav-mobile-auth">
+          <div class="js-guest">
+            <button type="button" class="btn btn-outline btn-block" data-open="login">Login</button>
+            <button type="button" class="btn btn-primary btn-block" data-open="roles">Get Started</button>
+          </div>
+          <div class="js-user" hidden>
+            <button type="button" class="btn btn-primary btn-block" data-action="go-dashboard">My dashboard <span class="notif-dot" data-notif-dot hidden></span></button>
+            <button type="button" class="btn btn-outline btn-block" data-action="logout">Log out</button>
+          </div>
+        </div>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="icon-btn" id="themeToggle" data-action="toggle-theme" aria-label="Switch to dark mode" aria-pressed="false">
+          <span class="theme-icon theme-sun" data-icon="sun"></span>
+          <span class="theme-icon theme-moon" data-icon="moon"></span>
+        </button>
+        <div class="auth-buttons js-guest">
+          <button type="button" class="btn btn-ghost" data-open="login">Login</button>
+          <button type="button" class="btn btn-primary" data-open="roles">Get Started</button>
+        </div>
+        <div class="auth-buttons js-user" hidden>
+          <button type="button" class="btn btn-ghost" data-action="go-dashboard">My dashboard <span class="notif-dot" data-notif-dot hidden></span></button>
+          <button type="button" class="btn btn-outline" data-action="logout">Log out</button>
+        </div>
+        <button type="button" class="icon-btn menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="primaryNav" data-icon="menu"></button>
+      </div>
+    </div>
+  </header>
+  <div class="nav-backdrop" id="navBackdrop"></div>
+
+  <main id="main" tabindex="-1">
+    <!-- ============== LANDING VIEW ============== -->
+    <div id="landingView">
+
+      <!-- Hero -->
+      <section class="hero" id="home" aria-labelledby="heroTitle">
+        <div class="hero-bg" aria-hidden="true">
+          <span class="glow glow-a"></span>
+          <span class="glow glow-b"></span>
+          <span class="blob blob-a"></span>
+          <span class="blob blob-b"></span>
+          <span class="dots dots-a"></span>
+        </div>
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="hero-badge"><span class="pulse-dot"></span>A student prototype that runs entirely in your browser</p>
+            <h1 id="heroTitle">Find the Right Opportunity. Build Your Future.</h1>
+            <p class="lead">Discover opportunities, connect with employers, and take the next step in your career with a smarter recruitment experience.</p>
+
+            <form class="search-card" id="heroSearch" role="search" aria-label="Search jobs" novalidate>
+              <div class="field">
+                <label for="heroKeyword">Keyword</label>
+                <input type="text" id="heroKeyword" placeholder="Job title, skill or company" autocomplete="off" />
+              </div>
+              <div class="field">
+                <label for="heroLocation">Location</label>
+                <input type="text" id="heroLocation" list="locationList" placeholder="City or Remote" autocomplete="off" />
+              </div>
+              <div class="field">
+                <label for="heroCategory">Category</label>
+                <select id="heroCategory" data-options="categories"><option value="">All categories</option></select>
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg"><span data-icon="search" data-size="18"></span>Search Jobs</button>
+            </form>
+
+            <div class="hero-cta">
+              <button type="button" class="btn btn-light btn-lg" data-action="explore">Explore Opportunities</button>
+              <button type="button" class="btn btn-violet btn-lg" data-action="hiring">I'm Hiring</button>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="orbit" aria-hidden="true">
+              <div class="ring ring-outer">
+                <span class="node" style="left:75%;top:93.3%"><span class="node-in n-person">PS</span></span>
+                <span class="node" style="left:17.9%;top:11.7%"><span class="node-in n-job" data-icon="briefcase" data-size="20"></span></span>
+              </div>
+              <div class="ring ring-mid">
+                <span class="node" style="left:97%;top:67.1%"><span class="node-in n-person">KM</span></span>
+                <span class="node" style="left:11.7%;top:82.1%"><span class="node-in n-job" data-icon="building" data-size="20"></span></span>
+                <span class="node" style="left:41.3%;top:.8%"><span class="node-in n-person">AR</span></span>
+              </div>
+              <div class="ring ring-inner">
+                <span class="node" style="left:50%;top:100%"><span class="node-in n-job" data-icon="check" data-size="20"></span></span>
+              </div>
+              <div class="orbit-core"><svg class="brand-mark" aria-hidden="true"><use href="#logoMark" /></svg></div>
+            </div>
+
+            <div class="float-card fc-1">
+              <span class="fc-icon" data-icon="briefcase"></span>
+              <div><strong data-count="12000" data-suffix="+">12,000+</strong><span>Job opportunities</span></div>
+              <em class="sample-tag">Sample</em>
+            </div>
+            <div class="float-card fc-2">
+              <span class="fc-icon" data-icon="building"></span>
+              <div><strong data-count="3500" data-suffix="+">3,500+</strong><span>Companies</span></div>
+              <em class="sample-tag">Sample</em>
+            </div>
+            <div class="float-card fc-3">
+              <span class="fc-icon" data-icon="users"></span>
+              <div><strong data-count="8000" data-suffix="+">8,000+</strong><span>Candidates</span></div>
+              <em class="sample-tag">Sample</em>
+            </div>
+            <p class="sample-note">Illustrative sample figures for demonstration, not real platform statistics.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Job discovery -->
+      <section class="section" id="jobs" aria-labelledby="jobsTitle">
+        <div class="container">
+          <div class="section-head reveal">
+            <div>
+              <h2 id="jobsTitle">Find jobs that fit</h2>
+              <p>Search and filter 15 sample listings. Every filter works together, and you can save, view and apply to any job.</p>
+            </div>
+          </div>
+
+          <form class="filters card reveal" id="filterForm" role="search" aria-label="Job filters" novalidate>
+            <div class="filter-grid">
+              <div class="field field-wide">
+                <label for="fKeyword">Title, keyword or company</label>
+                <div class="input-icon">
+                  <span data-icon="search" data-size="18"></span>
+                  <input type="search" id="fKeyword" placeholder="e.g. Python, Infosys, designer" autocomplete="off" />
+                </div>
+              </div>
+              <div class="field">
+                <label for="fLocation">Location</label>
+                <input type="text" id="fLocation" list="locationList" placeholder="Any location" autocomplete="off" />
+                <datalist id="locationList"></datalist>
+              </div>
+              <div class="field">
+                <label for="fCategory">Category</label>
+                <select id="fCategory" data-options="categories"><option value="">All categories</option></select>
+              </div>
+              <div class="field">
+                <label for="fType">Job type</label>
+                <select id="fType" data-options="types"><option value="">Any type</option></select>
+              </div>
+              <div class="field">
+                <label for="fLevel">Experience level</label>
+                <select id="fLevel" data-options="levels"><option value="">Any level</option></select>
+              </div>
+              <div class="field">
+                <label for="fSalary">Starting salary</label>
+                <select id="fSalary" data-options="salary"><option value="">Any salary</option></select>
+              </div>
+              <div class="field">
+                <label for="fSort">Sort by</label>
+                <select id="fSort">
+                  <option value="newest">Newest first</option>
+                  <option value="featured">Featured first</option>
+                  <option value="salary">Highest salary</option>
+                </select>
+              </div>
+            </div>
+            <div class="filter-foot">
+              <div class="chips" id="activeChips" aria-label="Active filters"></div>
+              <button type="button" class="btn btn-ghost btn-sm" data-action="clear-filters">Clear all filters</button>
+            </div>
+          </form>
+
+          <p class="result-count" id="resultCount" role="status" aria-live="polite"></p>
+          <div class="job-grid" id="jobGrid"></div>
+
+          <div class="empty-state" id="jobEmpty" hidden>
+            <svg viewBox="0 0 120 96" width="120" height="96" aria-hidden="true">
+              <rect x="14" y="26" width="92" height="58" rx="10" fill="none" stroke="currentColor" stroke-width="3" opacity=".35" />
+              <path d="M44 26v-6a6 6 0 0 1 6-6h20a6 6 0 0 1 6 6v6" fill="none" stroke="currentColor" stroke-width="3" opacity=".35" />
+              <circle cx="60" cy="56" r="13" fill="none" stroke="#2563ff" stroke-width="3.5" />
+              <path d="m70 66 10 10" stroke="#2563ff" stroke-width="3.5" stroke-linecap="round" />
+            </svg>
+            <h3>No jobs match these filters</h3>
+            <p>Try a broader keyword, remove a filter, or browse everything we have.</p>
+            <button type="button" class="btn btn-primary" data-action="clear-filters">Show all jobs</button>
+          </div>
+
+          <div class="load-more-wrap">
+            <button type="button" class="btn btn-outline" id="loadMoreBtn" data-action="load-more" hidden>Load more jobs</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Companies -->
+      <section class="section section-alt" id="companies" aria-labelledby="companiesTitle">
+        <div class="container">
+          <div class="section-head reveal">
+            <div>
+              <h2 id="companiesTitle">Companies in this demo</h2>
+              <p>Company names are used for illustration. Job counts and listings are demonstration data, not official live vacancies.</p>
+            </div>
+          </div>
+          <div class="company-grid reveal-group" id="companyGrid"></div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section class="section" id="how" aria-labelledby="howTitle">
+        <div class="container">
+          <div class="section-head reveal">
+            <div>
+              <h2 id="howTitle">How TalentSphere works</h2>
+              <p>One workflow for both sides of hiring: candidates discover and apply, recruiters post and review.</p>
+            </div>
+          </div>
+
+          <h3 class="track-title reveal">For job seekers</h3>
+          <ol class="steps reveal-group">
+            <li class="step"><span class="step-num">1</span><span class="step-icon" data-icon="user" data-size="26"></span><h4>Create Your Profile</h4><p>Add your skills, qualification and experience so we can suggest roles that match.</p></li>
+            <li class="step"><span class="step-num">2</span><span class="step-icon" data-icon="compass" data-size="26"></span><h4>Discover Opportunities</h4><p>Search, filter and save jobs. Open any listing to read the full details.</p></li>
+            <li class="step"><span class="step-num">3</span><span class="step-icon" data-icon="send" data-size="26"></span><h4>Apply for Jobs</h4><p>Send a validated application with a short cover letter in a couple of minutes.</p></li>
+            <li class="step"><span class="step-num">4</span><span class="step-icon" data-icon="chart" data-size="26"></span><h4>Track Your Progress</h4><p>Watch each application move from submitted to shortlisted, interview and selected.</p></li>
+          </ol>
+
+          <h3 class="track-title reveal">For recruiters</h3>
+          <ol class="steps steps-alt reveal-group">
+            <li class="step"><span class="step-num">1</span><span class="step-icon" data-icon="building" data-size="26"></span><h4>Create a recruiter demo profile</h4><p>Start a demo recruiter session. No real account is created.</p></li>
+            <li class="step"><span class="step-num">2</span><span class="step-icon" data-icon="plus" data-size="26"></span><h4>Post a job</h4><p>Fill in the role details and publish. It appears in Find Jobs straight away.</p></li>
+            <li class="step"><span class="step-num">3</span><span class="step-icon" data-icon="users" data-size="26"></span><h4>Review applications</h4><p>Search candidates, filter by status and open each application.</p></li>
+            <li class="step"><span class="step-num">4</span><span class="step-icon" data-icon="check" data-size="26"></span><h4>Update candidate status</h4><p>Move people through the pipeline. Job seekers see the change in their dashboard.</p></li>
+          </ol>
+
+          <div class="how-cta reveal">
+            <button type="button" class="btn btn-primary btn-lg" data-open="roles">Get Started</button>
+            <button type="button" class="btn btn-outline btn-lg" data-action="explore">Browse jobs first</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- About -->
+      <section class="section section-alt" id="about" aria-labelledby="aboutTitle">
+        <div class="container">
+          <div class="about-grid">
+            <div class="reveal">
+              <h2 id="aboutTitle">About TalentSphere</h2>
+              <p class="about-lead">TalentSphere is a recruitment platform concept built for a college software engineering project. Its mission is to make hiring clearer for everyone involved: candidates know where they stand, and recruiters can act on applications without friction.</p>
+              <dl class="values">
+                <div><dt>Accessibility</dt><dd>Keyboard-friendly, readable and usable on any screen size.</dd></div>
+                <div><dt>Efficiency</dt><dd>Search, apply and review in a few clicks, with no clutter in the way.</dd></div>
+                <div><dt>Transparency</dt><dd>Every application shows its current status and history.</dd></div>
+                <div><dt>Usability</dt><dd>Plain language, clear feedback and forms that explain their errors.</dd></div>
+              </dl>
+            </div>
+            <div class="benefit-stack reveal-group">
+              <article class="card benefit">
+                <span class="benefit-icon" data-icon="user" data-size="24"></span>
+                <h3>For job seekers</h3>
+                <ul class="checklist">
+                  <li>Search and filter listings by role, place, type, level and salary.</li>
+                  <li>Save jobs, apply with one form and keep a profile ready.</li>
+                  <li>See clear status updates for every application.</li>
+                </ul>
+              </article>
+              <article class="card benefit">
+                <span class="benefit-icon benefit-violet" data-icon="building" data-size="24"></span>
+                <h3>For recruiters</h3>
+                <ul class="checklist">
+                  <li>Post, edit and remove jobs from one workspace.</li>
+                  <li>Review candidates, search them and filter by status.</li>
+                  <li>Spot bottlenecks with simple built-in analytics.</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+
+          <aside class="card prototype-card reveal" aria-labelledby="protoTitle">
+            <span class="benefit-icon benefit-amber" data-icon="shield" data-size="24"></span>
+            <div>
+              <h3 id="protoTitle">What this prototype is, and is not</h3>
+              <p>TalentSphere is a frontend-only prototype. Jobs, applications and profile edits are stored in your browser's localStorage, not in a database. Demo logins are not secure authentication, resumes are never uploaded, and no emails or interview invitations are sent. A real deployment would need a secure backend, a database, server-side validation, authentication, authorization and safe file handling.</p>
+              <div class="prototype-actions">
+                <button type="button" class="btn btn-outline btn-sm" data-action="info" data-arg="prototype">Read the full notice</button>
+                <button type="button" class="btn btn-ghost btn-sm" data-action="reset-demo">Reset demo data</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============== JOB SEEKER DASHBOARD ============== -->
+    <section class="dash" id="seekerDash" aria-labelledby="seekerTitle" hidden>
+      <div class="container dash-shell">
+        <aside class="dash-side" aria-label="Job seeker navigation">
+          <div class="side-profile">
+            <span class="avatar avatar-lg" id="sideAvatar">DC</span>
+            <div><strong id="sideName">Demo Candidate</strong><span class="muted small" id="sideHeadline"></span></div>
+          </div>
+          <nav class="side-nav" aria-label="Dashboard sections">
+            <button type="button" class="side-link is-active" data-tab="overview" aria-current="page"><span data-icon="grid" data-size="18"></span><span>Overview</span></button>
+            <button type="button" class="side-link" data-tab="profile"><span data-icon="user" data-size="18"></span><span>My Profile</span></button>
+            <button type="button" class="side-link" data-tab="applications"><span data-icon="file" data-size="18"></span><span>My Applications</span><span class="count" id="navAppCount">0</span></button>
+            <button type="button" class="side-link" data-tab="saved"><span data-icon="bookmark" data-size="18"></span><span>Saved Jobs</span><span class="count" id="navSavedCount">0</span></button>
+            <button type="button" class="side-link" data-tab="status"><span data-icon="chart" data-size="18"></span><span>Application Status</span><span class="count count-alert" id="navNoteCount" hidden>0</span></button>
+            <button type="button" class="side-link" data-tab="recommended"><span data-icon="star" data-size="18"></span><span>Recommended Jobs</span></button>
+          </nav>
+          <div class="side-foot">
+            <p class="small muted">Everything here is stored only in this browser (localStorage).</p>
+            <button type="button" class="btn btn-outline btn-sm btn-block" data-action="switch-role" data-arg="recruiter">Switch to recruiter demo</button>
+            <button type="button" class="btn btn-ghost btn-sm btn-block" data-action="logout">Log out</button>
+          </div>
+        </aside>
+
+        <div class="dash-main">
+          <header class="dash-head">
+            <div>
+              <h1 id="seekerTitle">Welcome back</h1>
+              <p class="muted" id="seekerSub">Here is where your applications stand.</p>
+            </div>
+            <div class="dash-head-actions">
+              <button type="button" class="icon-btn bell" id="bellBtn" aria-label="Application updates">
+                <span data-icon="bell"></span>
+                <span class="bell-badge" id="bellBadge" hidden>0</span>
+              </button>
+              <button type="button" class="btn btn-primary" data-action="goto-jobs">Find jobs</button>
+            </div>
+          </header>
+          <p class="note local-note"><span data-icon="info" data-size="16"></span>Demo workspace: your profile, applications and saved jobs live only in this browser and are not sent anywhere.</p>
+
+          <div class="tab-panel" data-panel="overview">
+            <div class="stat-grid" id="seekerStats"></div>
+            <div class="two-col">
+              <section class="card panel" aria-labelledby="ovProfileTitle">
+                <div class="panel-head"><h2 id="ovProfileTitle">Profile summary</h2><button type="button" class="btn btn-ghost btn-sm" data-tab-go="profile">Edit profile</button></div>
+                <div id="ovProfile"></div>
+              </section>
+              <section class="card panel" aria-labelledby="ovAppsTitle">
+                <div class="panel-head"><h2 id="ovAppsTitle">Latest applications</h2><button type="button" class="btn btn-ghost btn-sm" data-tab-go="applications">See all</button></div>
+                <div id="ovApps" class="stack"></div>
+              </section>
+            </div>
+            <section class="panel-plain" aria-labelledby="ovRecsTitle">
+              <div class="panel-head"><h2 id="ovRecsTitle">Recommended for you</h2><button type="button" class="btn btn-ghost btn-sm" data-tab-go="recommended">More picks</button></div>
+              <div class="job-grid job-grid-3" id="ovRecs"></div>
+            </section>
+          </div>
+
+          <div class="tab-panel" data-panel="profile" hidden>
+            <div class="two-col two-col-wide">
+              <section class="card panel" aria-labelledby="profileTitle">
+                <h2 id="profileTitle">My profile</h2>
+                <form id="profileForm" novalidate>
+                  <div class="form-grid">
+                    <div class="field"><label for="pfName">Full name <span class="req" aria-hidden="true">*</span></label><input type="text" id="pfName" name="fullName" autocomplete="name" /><p class="field-error" id="pfName-err"></p></div>
+                    <div class="field"><label for="pfEmail">Email address <span class="req" aria-hidden="true">*</span></label><input type="email" id="pfEmail" name="email" autocomplete="email" /><p class="field-error" id="pfEmail-err"></p></div>
+                    <div class="field"><label for="pfPhone">Phone number</label><input type="tel" id="pfPhone" name="phone" autocomplete="tel" /><p class="field-error" id="pfPhone-err"></p></div>
+                    <div class="field"><label for="pfLocation">Current location</label><input type="text" id="pfLocation" name="location" /><p class="field-error" id="pfLocation-err"></p></div>
+                    <div class="field field-full"><label for="pfHeadline">Headline</label><input type="text" id="pfHeadline" name="headline" placeholder="e.g. Final-year student interested in web development" maxlength="90" /><p class="field-error" id="pfHeadline-err"></p></div>
+                    <div class="field"><label for="pfQualification">Highest qualification</label><select id="pfQualification" name="qualification" data-options="qualifications"><option value="">Select qualification</option></select><p class="field-error" id="pfQualification-err"></p></div>
+                    <div class="field"><label for="pfExperience">Years of experience</label><input type="number" id="pfExperience" name="experience" min="0" max="50" step="0.5" /><p class="field-error" id="pfExperience-err"></p></div>
+                    <div class="field field-full"><label for="pfSkills">Skills (comma separated)</label><input type="text" id="pfSkills" name="skills" placeholder="JavaScript, Python, SQL" /><p class="field-error" id="pfSkills-err"></p></div>
+                    <div class="field field-full"><label for="pfAbout">About you</label><textarea id="pfAbout" name="about" rows="3" maxlength="400"></textarea><p class="field-error" id="pfAbout-err"></p></div>
+                    <div class="field"><label for="pfPortfolio">Portfolio URL (optional)</label><input type="url" id="pfPortfolio" name="portfolio" placeholder="https://" /><p class="field-error" id="pfPortfolio-err"></p></div>
+                    <div class="field"><label for="pfLinkedin">LinkedIn URL (optional)</label><input type="url" id="pfLinkedin" name="linkedin" placeholder="https://" /><p class="field-error" id="pfLinkedin-err"></p></div>
+                  </div>
+                  <div class="form-actions"><button type="submit" class="btn btn-primary">Save profile</button></div>
+                </form>
+              </section>
+              <section class="card panel" aria-labelledby="completionTitle">
+                <h2 id="completionTitle">Profile completion</h2>
+                <div id="profileRing"></div>
+              </section>
+            </div>
+          </div>
+
+          <div class="tab-panel" data-panel="applications" hidden>
+            <section class="card panel" aria-labelledby="myAppsTitle">
+              <div class="panel-head">
+                <h2 id="myAppsTitle">My applications</h2>
+                <div class="field field-inline">
+                  <label for="appStatusFilter">Status</label>
+                  <select id="appStatusFilter"><option value="">All statuses</option></select>
+                </div>
+              </div>
+              <div id="myAppList" class="stack"></div>
+            </section>
+          </div>
+
+          <div class="tab-panel" data-panel="saved" hidden>
+            <section class="panel-plain" aria-labelledby="savedTitle">
+              <div class="panel-head"><h2 id="savedTitle">Saved jobs</h2></div>
+              <div class="job-grid" id="savedGrid"></div>
+            </section>
+          </div>
+
+          <div class="tab-panel" data-panel="status" hidden>
+            <section class="card panel" aria-labelledby="updatesTitle">
+              <h2 id="updatesTitle">Recent updates</h2>
+              <div id="noteList" class="stack"></div>
+            </section>
+            <section class="card panel" aria-labelledby="trackerTitle">
+              <h2 id="trackerTitle">Application status</h2>
+              <div id="trackerList" class="stack stack-lg"></div>
+            </section>
+          </div>
+
+          <div class="tab-panel" data-panel="recommended" hidden>
+            <section class="panel-plain" aria-labelledby="recTitle">
+              <div class="panel-head"><div><h2 id="recTitle">Recommended jobs</h2><p class="muted" id="recHint"></p></div></div>
+              <div class="job-grid" id="recGrid"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== RECRUITER DASHBOARD ============== -->
+    <section class="dash" id="recruiterDash" aria-labelledby="recTitleMain" hidden>
+      <div class="container dash-shell">
+        <aside class="dash-side" aria-label="Recruiter navigation">
+          <div class="side-profile">
+            <span class="avatar avatar-lg avatar-violet" id="recAvatar">DR</span>
+            <div><strong id="recName">Demo Recruiter</strong><span class="muted small">Recruiter workspace</span></div>
+          </div>
+          <nav class="side-nav" aria-label="Recruiter sections">
+            <button type="button" class="side-link is-active" data-tab="overview" aria-current="page"><span data-icon="grid" data-size="18"></span><span>Overview</span></button>
+            <button type="button" class="side-link" data-tab="jobs"><span data-icon="briefcase" data-size="18"></span><span>Manage Jobs</span><span class="count" id="recNavJobCount">0</span></button>
+            <button type="button" class="side-link" data-tab="applicants"><span data-icon="users" data-size="18"></span><span>Applicants</span><span class="count" id="recNavAppCount">0</span></button>
+          </nav>
+          <div class="side-foot">
+            <button type="button" class="btn btn-primary btn-sm btn-block" data-action="post-job"><span data-icon="plus" data-size="16"></span>Post New Job</button>
+            <p class="small muted">In this demo the recruiter workspace manages every listing, including the sample ones.</p>
+            <button type="button" class="btn btn-outline btn-sm btn-block" data-action="switch-role" data-arg="seeker">Switch to job seeker demo</button>
+            <button type="button" class="btn btn-ghost btn-sm btn-block" data-action="logout">Log out</button>
+          </div>
+        </aside>
+
+        <div class="dash-main">
+          <header class="dash-head">
+            <div>
+              <h1 id="recTitleMain">Recruiter dashboard</h1>
+              <p class="muted">Post jobs, review candidates and keep the pipeline moving.</p>
+            </div>
+            <div class="dash-head-actions">
+              <button type="button" class="btn btn-primary" data-action="post-job"><span data-icon="plus" data-size="18"></span>Post New Job</button>
+            </div>
+          </header>
+          <p class="note local-note"><span data-icon="info" data-size="16"></span>Demo workspace: jobs, applications and status changes are saved only in this browser. No candidate is ever emailed.</p>
+
+          <div class="tab-panel" data-panel="overview">
+            <div class="stat-grid" id="recStats"></div>
+            <div class="two-col">
+              <section class="card panel" aria-labelledby="distTitle">
+                <h2 id="distTitle">Application status distribution</h2>
+                <div id="donutWrap"></div>
+              </section>
+              <section class="card panel" aria-labelledby="catTitle">
+                <h2 id="catTitle">Applications by job category</h2>
+                <div id="catBars"></div>
+              </section>
+            </div>
+            <div class="two-col">
+              <section class="card panel" aria-labelledby="rjTitle">
+                <div class="panel-head"><h2 id="rjTitle">Recent job postings</h2><button type="button" class="btn btn-ghost btn-sm" data-tab-go="jobs">Manage jobs</button></div>
+                <div id="recentJobs" class="stack"></div>
+              </section>
+              <section class="card panel" aria-labelledby="raTitle">
+                <div class="panel-head"><h2 id="raTitle">Recent applications</h2><button type="button" class="btn btn-ghost btn-sm" data-tab-go="applicants">All applicants</button></div>
+                <div id="recentApps" class="stack"></div>
+              </section>
+            </div>
+            <section class="card panel" aria-labelledby="coTitle">
+              <h2 id="coTitle">Candidate overview</h2>
+              <div id="candOverview"></div>
+            </section>
+          </div>
+
+          <div class="tab-panel" data-panel="jobs" hidden>
+            <section class="card panel" aria-labelledby="mjTitle">
+              <div class="panel-head">
+                <h2 id="mjTitle">Manage jobs</h2>
+                <div class="toolbar">
+                  <div class="field field-inline"><label for="recJobSearch">Search jobs</label><input type="search" id="recJobSearch" placeholder="Title or company" autocomplete="off" /></div>
+                  <button type="button" class="btn btn-primary btn-sm" data-action="post-job"><span data-icon="plus" data-size="16"></span>Post New Job</button>
+                </div>
+              </div>
+              <div id="recJobList" class="stack"></div>
+            </section>
+          </div>
+
+          <div class="tab-panel" data-panel="applicants" hidden>
+            <section class="card panel" aria-labelledby="apTitle">
+              <div class="panel-head"><h2 id="apTitle">Applicants</h2></div>
+              <div class="toolbar toolbar-wrap">
+                <div class="field field-inline"><label for="candSearch">Search candidates</label><input type="search" id="candSearch" placeholder="Name, email, skill or job" autocomplete="off" /></div>
+                <div class="field field-inline"><label for="candStatus">Status</label><select id="candStatus"><option value="">All statuses</option></select></div>
+                <div class="field field-inline"><label for="candJob">Job</label><select id="candJob"><option value="">All jobs</option></select></div>
+              </div>
+              <div id="candList" class="stack"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#home" class="brand brand-footer" data-nav="home" aria-label="TalentSphere home">
+            <svg class="brand-mark" aria-hidden="true"><use href="#logoMark" /></svg>
+            <span class="brand-name">TalentSphere</span>
+          </a>
+          <p>A smart recruitment platform concept. This educational frontend prototype demonstrates how job seekers and recruiters could work together.</p>
+        </div>
+        <nav aria-label="Explore">
+          <h3>Explore</h3>
+          <ul>
+            <li><a href="#home" data-nav="home">Home</a></li>
+            <li><a href="#jobs" data-nav="jobs">Find Jobs</a></li>
+            <li><a href="#companies" data-nav="companies">Companies</a></li>
+            <li><a href="#how" data-nav="how">How It Works</a></li>
+            <li><a href="#about" data-nav="about">About Us</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Job seekers">
+          <h3>Job seekers</h3>
+          <ul>
+            <li><button type="button" class="link-btn" data-action="seeker-tab" data-arg="profile">My profile</button></li>
+            <li><button type="button" class="link-btn" data-action="seeker-tab" data-arg="applications">My applications</button></li>
+            <li><button type="button" class="link-btn" data-action="seeker-tab" data-arg="saved">Saved jobs</button></li>
+            <li><button type="button" class="link-btn" data-action="seeker-tab" data-arg="recommended">Recommended jobs</button></li>
+          </ul>
+        </nav>
+        <nav aria-label="Recruiters">
+          <h3>Recruiters</h3>
+          <ul>
+            <li><button type="button" class="link-btn" data-action="post-job">Post a job</button></li>
+            <li><button type="button" class="link-btn" data-action="recruiter-tab" data-arg="jobs">Manage jobs</button></li>
+            <li><button type="button" class="link-btn" data-action="recruiter-tab" data-arg="applicants">Review applicants</button></li>
+            <li><button type="button" class="link-btn" data-action="recruiter-tab" data-arg="overview">Analytics</button></li>
+          </ul>
+        </nav>
+        <div>
+          <h3>Contact (sample details)</h3>
+          <address>
+            TalentSphere Demo Lab<br />
+            Sample Campus Road, Chennai 600000<br />
+            <span class="muted">Email:</span> hello@talentsphere.example<br />
+            <span class="muted">Phone:</span> +91 00000 00000
+          </address>
+          <p class="small muted">These contact details are placeholders and are not monitored.</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span id="yearNow">2026</span> TalentSphere. Educational project, not a real recruitment service.</p>
+        <div class="footer-legal">
+          <button type="button" class="link-btn" data-action="info" data-arg="privacy">Privacy Policy</button>
+          <button type="button" class="link-btn" data-action="info" data-arg="terms">Terms and Conditions</button>
+          <button type="button" class="link-btn" data-action="reset-demo">Reset demo data</button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============== MODALS ============== -->
+
+  <!-- Login -->
+  <div class="modal" id="modalLogin" role="dialog" aria-modal="true" aria-labelledby="loginTitle" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog modal-sm">
+      <button type="button" class="modal-x icon-btn" data-close aria-label="Close login" data-icon="x"></button>
+      <div class="modal-body">
+        <h2 id="loginTitle">Log in to your demo workspace</h2>
+        <p class="muted" id="loginContext">Enter any valid email and a password of at least 6 characters. This opens a demo session, not secure authentication.</p>
+        <form id="loginForm" novalidate>
+          <fieldset class="role-switch">
+            <legend class="sr-only">Log in as</legend>
+            <label><input type="radio" name="role" value="seeker" checked /><span>Job Seeker</span></label>
+            <label><input type="radio" name="role" value="recruiter" /><span>Recruiter</span></label>
+          </fieldset>
+          <div class="field">
+            <label for="loginEmail">Email address</label>
+            <input type="email" id="loginEmail" name="email" autocomplete="email" placeholder="you@example.com" />
+            <p class="field-error" id="loginEmail-err"></p>
+          </div>
+          <div class="field">
+            <label for="loginPassword">Password</label>
+            <div class="pw-wrap">
+              <input type="password" id="loginPassword" name="password" autocomplete="current-password" />
+              <button type="button" class="pw-toggle" data-toggle-password="loginPassword" aria-label="Show password" aria-pressed="false" data-icon="eye" data-size="18"></button>
+            </div>
+            <p class="field-error" id="loginPassword-err"></p>
+          </div>
+          <div class="row-end"><button type="button" class="link-btn" data-action="info" data-arg="forgot">Forgot password?</button></div>
+          <button type="submit" class="btn btn-primary btn-block">Log in</button>
+        </form>
+        <div class="divider"><span>or try a ready-made demo</span></div>
+        <div class="demo-pair">
+          <button type="button" class="btn btn-outline" data-action="demo-seeker">Demo job seeker</button>
+          <button type="button" class="btn btn-outline" data-action="demo-recruiter">Demo recruiter</button>
+        </div>
+        <p class="small center">New here? <button type="button" class="link-btn" data-open="register">Create an account</button></p>
+        <p class="note small"><span data-icon="shield" data-size="16"></span>Real authentication needs a secure backend. This prototype never saves passwords.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register -->
+  <div class="modal" id="modalRegister" role="dialog" aria-modal="true" aria-labelledby="registerTitle" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog modal-sm">
+      <button type="button" class="modal-x icon-btn" data-close aria-label="Close sign up" data-icon="x"></button>
+      <div class="modal-body">
+        <h2 id="registerTitle">Create a demo account</h2>
+        <p class="muted">Your name and email are kept in this browser only so the demo feels personal. Passwords are checked and then discarded.</p>
+        <form id="registerForm" novalidate>
+          <fieldset class="role-pick">
+            <legend>I am a</legend>
+            <label class="role-opt"><input type="radio" name="role" value="seeker" checked /><span class="role-opt-body"><strong>Job Seeker</strong><small>Search, apply and track</small></span></label>
+            <label class="role-opt"><input type="radio" name="role" value="recruiter" /><span class="role-opt-body"><strong>Recruiter</strong><small>Post jobs and review people</small></span></label>
+          </fieldset>
+          <div class="field">
+            <label for="regName">Full name</label>
+            <input type="text" id="regName" name="fullName" autocomplete="name" />
+            <p class="field-error" id="regName-err"></p>
+          </div>
+          <div class="field">
+            <label for="regEmail">Email address</label>
+            <input type="email" id="regEmail" name="email" autocomplete="email" placeholder="you@example.com" />
+            <p class="field-error" id="regEmail-err"></p>
+          </div>
+          <div class="field">
+            <label for="regPassword">Password</label>
+            <div class="pw-wrap">
+              <input type="password" id="regPassword" name="password" autocomplete="new-password" />
+              <button type="button" class="pw-toggle" data-toggle-password="regPassword" aria-label="Show password" aria-pressed="false" data-icon="eye" data-size="18"></button>
+            </div>
+            <p class="hint">At least 8 characters, with a letter and a number.</p>
+            <p class="field-error" id="regPassword-err"></p>
+          </div>
+          <div class="field">
+            <label for="regConfirm">Confirm password</label>
+            <input type="password" id="regConfirm" name="confirm" autocomplete="new-password" />
+            <p class="field-error" id="regConfirm-err"></p>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Create demo account</button>
+        </form>
+        <p class="small center">Already have a demo login? <button type="button" class="link-btn" data-open="login">Log in</button></p>
+        <p class="note small"><span data-icon="shield" data-size="16"></span>Demo only. Real accounts would need server-side authentication.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Role selection -->
+  <div class="modal" id="modalRoles" role="dialog" aria-modal="true" aria-labelledby="rolesTitle" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog modal-md">
+      <button type="button" class="modal-x icon-btn" data-close aria-label="Close" data-icon="x"></button>
+      <div class="modal-body">
+        <h2 id="rolesTitle">How would you like to use TalentSphere?</h2>
+        <p class="muted">Pick a role to create a demo account, or jump straight into a ready-made demo workspace.</p>
+        <div class="role-cards">
+          <button type="button" class="role-card" data-action="start-role" data-arg="seeker">
+            <span class="benefit-icon" data-icon="user" data-size="26"></span>
+            <strong>I'm looking for a job</strong>
+            <span>Search listings, save favourites, apply and track every application.</span>
+          </button>
+          <button type="button" class="role-card" data-action="start-role" data-arg="recruiter">
+            <span class="benefit-icon benefit-violet" data-icon="building" data-size="26"></span>
+            <strong>I'm hiring</strong>
+            <span>Post jobs, review candidates and update their status.</span>
+          </button>
+        </div>
+        <div class="divider"><span>skip sign-up</span></div>
+        <div class="demo-pair">
+          <button type="button" class="btn btn-outline" data-action="demo-seeker">Open job seeker demo</button>
+          <button type="button" class="btn btn-outline" data-action="demo-recruiter">Open recruiter demo</button>
+        </div>
+        <p class="note small"><span data-icon="shield" data-size="16"></span>Demo sessions are not secure logins. They only switch which interface you see.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Job details -->
+  <div class="modal" id="modalJob" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog modal-lg">
+      <button type="button" class="modal-x icon-btn" data-close aria-label="Close job details" data-icon="x"></button>
+      <div id="jobModalBody"></div>
+    </div>
+  </div>
+
+  <!-- Apply -->
+  <div class="modal" id="modalApply" role="dialog" aria-modal="true" aria-labelledby="applyTitle" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog modal-md">
+      <button type="button" class="modal-x icon-btn" data-close aria-label="Close application form" data-icon="x"></button>
+      <div id="applyFormWrap" class="modal-body">
+        <h2 id="applyTitle">Apply for this job</h2>
+        <p class="apply-job" id="applyJobSummary"></p>
+        <p class="note small"><span data-icon="info" data-size="16"></span>Prototype notice: your application is saved in this browser only. No email is sent and nothing is uploaded to a server.</p>
+        <form id="applyForm" novalidate>
+          <input type="hidden" name="jobId" id="apJobId" />
+          <div class="form-grid">
+            <div class="field"><label for="apName">Full name <span class="req" aria-hidden="true">*</span></label><input type="text" id="apName" name="fullName" autocomplete="name" /><p class="field-error" id="apName-err"></p></div>
+            <div class="field"><label for="apEmail">Email address <span class="req" aria-hidden="true">*</span></label><input type="email" id="apEmail" name="email" autocomplete="email" /><p class="field-error" id="apEmail-err"></p></div>
+            <div class="field"><label for="apPhone">Phone number <span class="req" aria-hidden="true">*</span></label><input type="tel" id="apPhone" name="phone" autocomplete="tel" placeholder="+91 90000 00000" /><p class="field-error" id="apPhone-err"></p></div>
+            <div class="field"><label for="apLocation">Current location <span class="req" aria-hidden="true">*</span></label><input type="text" id="apLocation" name="location" autocomplete="address-level2" /><p class="field-error" id="apLocation-err"></p></div>
+            <div class="field"><label for="apQualification">Highest qualification <span class="req" aria-hidden="true">*</span></label><select id="apQualification" name="qualification" data-options="qualifications"><option value="">Select qualification</option></select><p class="field-error" id="apQualification-err"></p></div>
+            <div class="field"><label for="apExperience">Years of experience <span class="req" aria-hidden="true">*</span></label><input type="number" id="apExperience" name="experience" min="0" max="50" step="0.5" /><p class="field-error" id="apExperience-err"></p></div>
+            <div class="field field-full"><label for="apSkills">Skills (comma separated) <span class="req" aria-hidden="true">*</span></label><input type="text" id="apSkills" name="skills" placeholder="e.g. JavaScript, SQL, Communication" /><p class="field-error" id="apSkills-err"></p></div>
+            <div class="field"><label for="apPortfolio">Portfolio URL (optional)</label><input type="url" id="apPortfolio" name="portfolio" placeholder="https://" /><p class="field-error" id="apPortfolio-err"></p></div>
+            <div class="field"><label for="apLinkedin">LinkedIn URL (optional)</label><input type="url" id="apLinkedin" name="linkedin" placeholder="https://" /><p class="field-error" id="apLinkedin-err"></p></div>
+            <div class="field field-full">
+              <label for="apCover">Short cover letter <span class="req" aria-hidden="true">*</span></label>
+              <textarea id="apCover" name="cover" rows="4" maxlength="800" placeholder="Tell the recruiter why you are a good fit."></textarea>
+              <p class="hint"><span id="apCoverCount">0</span> / 800 characters</p>
+              <p class="field-error" id="apCover-err"></p>
+            </div>
+            <div class="field field-full">
+              <label for="apResume">Resume (optional, PDF or Word, up to 2 MB)</label>
+              <input type="file" id="apResume" name="resume" accept=".pdf,.doc,.docx" />
+              <p class="hint" id="apResumeInfo">Selecting a file only records its name in this prototype. The file itself is never uploaded or stored.</p>
+              <p class="field-error" id="apResume-err"></p>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+            <button type="submit" class="btn btn-primary">Submit application</button>
+          </div>
+        </form>
+      </div>
+      <div id="applySuccess" class="modal-body success-panel" hidden>
+        <svg class="success-check" viewBox="0 0 64 64" width="72" height="72" aria-hidden="true">
+          <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" stroke-width="3" />
+          <path d="m20 33 8 8 16-17" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <h2 id="applySuccessTitle">Application submitted</h2>
+        <p id="applySuccessText"></p>
+        <div class="modal-actions modal-actions-center">
+          <button type="button" class="btn btn-outline" data-close>Keep browsing</button>
+          <button type="button" class="btn btn-primary" id="trackAppBtn">Track my application</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Post / edit job -->
+  <div class="modal" id="modalJobForm" role="dialog" aria-modal="true" aria-labelledby="jobFormTitle" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog modal-md">
+      <button type="button" class="modal-x icon-btn" data-close aria-label="Close job form" data-icon="x"></button>
+      <div class="modal-body">
+        <h2 id="jobFormTitle">Post a new job</h2>
+        <p class="muted" id="jobFormIntro">New jobs appear in Find Jobs immediately and are saved in this browser.</p>
+        <form id="jobForm" novalidate>
+          <input type="hidden" id="jfId" name="id" />
+          <div class="form-grid">
+            <div class="field"><label for="jfTitle">Job title <span class="req" aria-hidden="true">*</span></label><input type="text" id="jfTitle" name="title" maxlength="80" /><p class="field-error" id="jfTitle-err"></p></div>
+            <div class="field"><label for="jfCompany">Company name <span class="req" aria-hidden="true">*</span></label><input type="text" id="jfCompany" name="company" maxlength="60" /><p class="field-error" id="jfCompany-err"></p></div>
+            <div class="field field-full"><label for="jfDescription">Job description <span class="req" aria-hidden="true">*</span></label><textarea id="jfDescription" name="description" rows="4" maxlength="1200" placeholder="What will this person do, and what makes the role interesting?"></textarea><p class="field-error" id="jfDescription-err"></p></div>
+            <div class="field field-full"><label for="jfSkills">Required skills (comma separated) <span class="req" aria-hidden="true">*</span></label><input type="text" id="jfSkills" name="skills" placeholder="e.g. JavaScript, SQL, Teamwork" /><p class="field-error" id="jfSkills-err"></p></div>
+            <div class="field"><label for="jfLocation">Location <span class="req" aria-hidden="true">*</span></label><input type="text" id="jfLocation" name="location" list="locationList" placeholder="City or Remote" /><p class="field-error" id="jfLocation-err"></p></div>
+            <div class="field"><label for="jfType">Employment type <span class="req" aria-hidden="true">*</span></label><select id="jfType" name="type" data-options="types"><option value="">Select type</option></select><p class="field-error" id="jfType-err"></p></div>
+            <div class="field"><label for="jfSalaryMin">Salary minimum (LPA) <span class="req" aria-hidden="true">*</span></label><input type="number" id="jfSalaryMin" name="salaryMin" min="0" max="500" step="0.1" /><p class="field-error" id="jfSalaryMin-err"></p></div>
+            <div class="field"><label for="jfSalaryMax">Salary maximum (LPA) <span class="req" aria-hidden="true">*</span></label><input type="number" id="jfSalaryMax" name="salaryMax" min="0" max="500" step="0.1" /><p class="field-error" id="jfSalaryMax-err"></p></div>
+            <div class="field"><label for="jfLevel">Experience level <span class="req" aria-hidden="true">*</span></label><select id="jfLevel" name="level" data-options="levels"><option value="">Select level</option></select><p class="field-error" id="jfLevel-err"></p></div>
+            <div class="field"><label for="jfCategory">Job category <span class="req" aria-hidden="true">*</span></label><select id="jfCategory" name="category" data-options="categories"><option value="">Select category</option></select><p class="field-error" id="jfCategory-err"></p></div>
+            <div class="field field-full"><label class="check"><input type="checkbox" id="jfFeatured" name="featured" /><span>Mark as a featured job</span></label></div>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+            <button type="submit" class="btn btn-primary" id="jobFormSubmit">Post job</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Applicant details -->
+  <div class="modal" id="modalApplicant" role="dialog" aria-modal="true" aria-labelledby="applicantTitle" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog modal-md">
+      <button type="button" class="modal-x icon-btn" data-close aria-label="Close applicant details" data-icon="x"></button>
+      <div class="modal-body" id="applicantBody"></div>
+    </div>
+  </div>
+
+  <!-- Confirmation -->
+  <div class="modal" id="modalConfirm" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMsg" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog modal-xs">
+      <div class="modal-body">
+        <h2 id="confirmTitle">Are you sure?</h2>
+        <p id="confirmMsg"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmOk">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Information (privacy, terms, prototype notice, forgot password) -->
+  <div class="modal" id="modalInfo" role="dialog" aria-modal="true" aria-labelledby="infoTitle" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog modal-md">
+      <button type="button" class="modal-x icon-btn" data-close aria-label="Close" data-icon="x"></button>
+      <div class="modal-body">
+        <h2 id="infoTitle">Information</h2>
+        <div class="prose" id="infoBody"></div>
+        <div class="modal-actions"><button type="button" class="btn btn-primary" data-close>Got it</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toasts and utilities -->
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+  <button type="button" class="to-top" id="toTop" data-action="to-top" aria-label="Back to top" data-icon="chevron-up" hidden></button>
+
+  <script src="script.js"></script>
+</body>
+</html>
